@@ -1,0 +1,21 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Creativekallol\CkFaq\:
+    resource: '../Classes/*'
+    exclude: '../Classes/Domain/Model/*'
+
+  connection.ck_faq:
+    class: 'TYPO3\CMS\Core\Database\Connection'
+    factory:
+      - '@TYPO3\CMS\Core\Database\ConnectionPool'
+      - 'getConnectionForTable'
+    arguments:
+      - 'tx_ckfaq_domain_model_records'
+
+  Creativekallol\CkFaq\Service\FaqService:
+    arguments:
+      $connection: '@connection.ck_faq'

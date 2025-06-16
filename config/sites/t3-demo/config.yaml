@@ -1,0 +1,14 @@
+base: 'https://t3-demo.ddev.site/'
+languages:
+  -
+    title: English
+    enabled: true
+    locale: en-US
+    hreflang: ''
+    base: /
+    websiteTitle: 'T3 DEMO'
+    navigationTitle: ''
+    flag: en-us-gb
+    languageId: 0
+rootPageId: 1
+websiteTitle: ''

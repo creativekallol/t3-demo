@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="EXT:ck_faq/Resources/Private/Language/locallang.xlf" date="2025-06-17T10:04:24Z" product-name="ck_faq">
+		<header/>
+		<body>
+			<trans-unit id="myText" resname="myText">
+				<source>My Text</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

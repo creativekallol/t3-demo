@@ -1,0 +1,10 @@
+plugin.tx_ck_faq_pi1 {
+    view {
+        templateRootPath.0 = EXT:ck_faq/Resources/Private/Templates/
+        templateRootPath.1 = {$plugin.tx_ckfaq_pi1.view.templateRootPath}
+        partialRootPath.0 = EXT:ck_faq/Resources/Private/Partials/
+        partialRootPath.1 = {$plugin.tx_ckfaq_pi1.view.partialRootPath}
+        layoutRootPath.0 = EXT:ck_faq/Resources/Private/Layouts/
+        layoutRootPath.1 = {$plugin.tx_ckfaq_pi1.view.layoutRootPath}
+    }
+}
