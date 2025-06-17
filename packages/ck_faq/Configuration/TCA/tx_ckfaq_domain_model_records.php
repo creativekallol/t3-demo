@@ -116,7 +116,7 @@ return [
             'label' => 'LLL:EXT:ck_faq/Resources/Private/Language/locallang_db.xlf:tx_ckfaq_domain_model_records.category',
             'config' => [
                 'type' => 'category',
-                'relationship' => 'oneToMany',
+                'relationship' => 'manyToMany',
                 'treeConfig' => [
                     'appearance' => [
                         'expandAll' => false,

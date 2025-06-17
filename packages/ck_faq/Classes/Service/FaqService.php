@@ -27,17 +27,76 @@ namespace Creativekallol\CkFaq\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  * ************************************************************* */
 
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @author (c) 2025 Kallol Chakraborty <kallolchakraborty@learntube.de>
  */
 class FaqService
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function getFaqByDemand(array $demand = []): array
     {
-        $this->connection = $connection;
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_ckfaq_domain_model_records');
+
+        $queryBuilder
+            ->select(
+                'r.uid',
+                'r.title',
+                'r.description'
+            )
+            ->from('tx_ckfaq_domain_model_records', 'r')
+            ->leftJoin(
+                'r',
+                'sys_category_record_mm',
+                'mm',
+                'mm.uid_foreign = r.uid AND mm.tablenames = ' . $queryBuilder->createNamedParameter('tx_ckfaq_domain_model_records') . ' AND mm.fieldname = ' . $queryBuilder->createNamedParameter('category')
+            )
+            ->leftJoin(
+                'mm',
+                'sys_category',
+                'c',
+                'c.uid = mm.uid_local'
+            );
+
+        $context = GeneralUtility::makeInstance(Context::class);
+        $languageUid = (int)$context->getPropertyFromAspect('language', 'id');
+
+        $constraints = [
+            $queryBuilder->expr()->eq('r.hidden', $queryBuilder->createNamedParameter(0)),
+            $queryBuilder->expr()->eq('r.deleted', $queryBuilder->createNamedParameter(0)),
+            $queryBuilder->expr()->or(
+                $queryBuilder->expr()->eq('r.starttime', $queryBuilder->createNamedParameter(0)),
+                $queryBuilder->expr()->lte('r.starttime', $queryBuilder->createNamedParameter(time()))
+            ),
+            $queryBuilder->expr()->or(
+                $queryBuilder->expr()->eq('r.endtime', $queryBuilder->createNamedParameter(0)),
+                $queryBuilder->expr()->gt('r.endtime', $queryBuilder->createNamedParameter(time()))
+            ),
+            $queryBuilder->expr()->eq('r.sys_language_uid', $queryBuilder->createNamedParameter($languageUid, Connection::PARAM_INT))
+        ];
+
+        if (!empty($demand['category'])) {
+            $constraints[] = $queryBuilder->expr()->eq('c.uid', $queryBuilder->createNamedParameter((int)$demand['category']));
+        }
+
+        if (!empty($demand['term'])) {
+            $likeTerm = '%' . $queryBuilder->escapeLikeWildcards($demand['term']) . '%';
+            $constraints[] = $queryBuilder->expr()->or(
+                $queryBuilder->expr()->like('r.title', $queryBuilder->createNamedParameter($likeTerm)),
+                $queryBuilder->expr()->like('r.description', $queryBuilder->createNamedParameter($likeTerm))
+            );
+        }
+
+        $queryBuilder
+            ->where(...$constraints)
+            ->orderBy('r.count_helpful', 'DESC')
+            ->addOrderBy('r.count_not_helpful', 'ASC')
+            ->addOrderBy('r.tstamp', 'DESC');
+
+        return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
 }

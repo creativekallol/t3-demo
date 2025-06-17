@@ -27,6 +27,7 @@ namespace Creativekallol\CkFaq\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  * ************************************************************* */
 
+use Creativekallol\CkFaq\Service\CategoryService;
 use Creativekallol\CkFaq\Service\FaqService;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -36,15 +37,35 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
  */
 class FaqController extends ActionController
 {
+    protected CategoryService $categoryService;
+
     protected FaqService $faqService;
 
-    public function __construct(FaqService $faqService)
+    public function __construct(CategoryService $categoryService, FaqService $faqService)
     {
+        $this->categoryService = $categoryService;
         $this->faqService = $faqService;
     }
 
     public function listAction(): ResponseInterface
     {
+        $categoryParent = (int)($this->settings['categoryParent'] ?? 0);
+        $demand = ['category' => '', 'term' => ''];
+
+        if ($this->request->hasArgument('category')) {
+            $demand['category'] = (int)($this->request->getArgument('category') ?? 0);
+        }
+
+        if ($this->request->hasArgument('term')) {
+            $demand['term'] = trim((string)($this->request->getArgument('term') ?? ''));
+        }
+
+        $this->view->assignMultiple([
+            'categories' => $this->categoryService->getCategories($categoryParent),
+            'faqs' => $this->faqService->getFaqByDemand($demand),
+            'demand' => $demand,
+        ]);
+
         return $this->htmlResponse();
     }
 }
