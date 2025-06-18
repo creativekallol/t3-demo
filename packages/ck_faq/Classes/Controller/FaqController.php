@@ -30,6 +30,8 @@ namespace Creativekallol\CkFaq\Controller;
 use Creativekallol\CkFaq\Service\CategoryService;
 use Creativekallol\CkFaq\Service\FaqService;
 use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Pagination\ArrayPaginator;
+use TYPO3\CMS\Core\Pagination\SlidingWindowPagination;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 /**
@@ -38,8 +40,9 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 class FaqController extends ActionController
 {
     protected CategoryService $categoryService;
-
     protected FaqService $faqService;
+    protected int $itemsPerPage = 5;
+    protected int $maximumLinks = 3;
 
     public function __construct(CategoryService $categoryService, FaqService $faqService)
     {
@@ -49,8 +52,12 @@ class FaqController extends ActionController
 
     public function listAction(): ResponseInterface
     {
+        $storagePid = (int)($this->settings['storagePid'] ?? 0);
         $categoryParent = (int)($this->settings['categoryParent'] ?? 0);
-        $demand = ['category' => '', 'term' => ''];
+        $itemsPerPage = max((int)($this->settings['itemsPerPage'] ?? 0), $this->itemsPerPage);
+        $currentPage = $this->request->hasArgument('currentPage') ? (int)$this->request->getArgument('currentPage') : 1;
+
+        $demand = ['category' => '', 'term' => '', 'pid' => $storagePid];
 
         if ($this->request->hasArgument('category')) {
             $demand['category'] = (int)($this->request->getArgument('category') ?? 0);
@@ -60,10 +67,16 @@ class FaqController extends ActionController
             $demand['term'] = trim((string)($this->request->getArgument('term') ?? ''));
         }
 
+        $faqs = $this->faqService->getFaqByDemand($demand);
+        $paginator = new ArrayPaginator($faqs, $currentPage, $itemsPerPage);
+        $pagination = new SlidingWindowPagination($paginator, $this->maximumLinks);
+
         $this->view->assignMultiple([
             'categories' => $this->categoryService->getCategories($categoryParent),
-            'faqs' => $this->faqService->getFaqByDemand($demand),
+            'pagination' => $pagination,
             'demand' => $demand,
+            'faqCount' => count($faqs),
+            'currentPage' => $currentPage,
         ]);
 
         return $this->htmlResponse();

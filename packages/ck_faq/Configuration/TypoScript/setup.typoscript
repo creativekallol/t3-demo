@@ -1,4 +1,4 @@
-plugin.tx_ck_faq_pi1 {
+plugin.tx_ckfaq_pi1 {
     view {
         templateRootPath.0 = EXT:ck_faq/Resources/Private/Templates/
         templateRootPath.1 = {$plugin.tx_ckfaq_pi1.view.templateRootPath}
@@ -6,5 +6,10 @@ plugin.tx_ck_faq_pi1 {
         partialRootPath.1 = {$plugin.tx_ckfaq_pi1.view.partialRootPath}
         layoutRootPath.0 = EXT:ck_faq/Resources/Private/Layouts/
         layoutRootPath.1 = {$plugin.tx_ckfaq_pi1.view.layoutRootPath}
+    }
+    settings {
+        storagePid = {$plugin.tx_ckfaq_pi1.settings.storagePid}
+        categoryParent = {$plugin.tx_ckfaq_pi1.settings.categoryParent}
+        itemsPerPage = {$plugin.tx_ckfaq_pi1.settings.itemsPerPage}
     }
 }

@@ -79,6 +79,10 @@ class FaqService
             $queryBuilder->expr()->eq('r.sys_language_uid', $queryBuilder->createNamedParameter($languageUid, Connection::PARAM_INT))
         ];
 
+        if (!empty($demand['pid'])) {
+            $constraints[] = $queryBuilder->expr()->eq('r.pid', $queryBuilder->createNamedParameter((int)$demand['pid'], Connection::PARAM_INT));
+        }
+
         if (!empty($demand['category'])) {
             $constraints[] = $queryBuilder->expr()->eq('c.uid', $queryBuilder->createNamedParameter((int)$demand['category']));
         }

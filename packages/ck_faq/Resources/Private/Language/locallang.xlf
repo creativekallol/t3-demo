@@ -9,6 +9,12 @@
 			<trans-unit id="search.btnLabel" resname="search.btnLabel">
 				<source>Search</source>
 			</trans-unit>
+			<trans-unit id="pagination.previous" resname="pagination.previous">
+				<source>Previous</source>
+			</trans-unit>
+			<trans-unit id="pagination.next" resname="pagination.next">
+				<source>Next</source>
+			</trans-unit>
 			<trans-unit id="sidebar.label.categories" resname="sidebar.label.categories">
 				<source>Categories</source>
 			</trans-unit>
