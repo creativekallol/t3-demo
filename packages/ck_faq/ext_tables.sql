@@ -5,3 +5,9 @@ CREATE TABLE tx_ckfaq_domain_model_records (
 	count_not_helpful int(11) unsigned NOT NULL DEFAULT '0',
 	category int(11) unsigned DEFAULT '0',
 );
+
+CREATE TABLE sys_category (
+	slug varchar(255) DEFAULT '/' NOT NULL,
+
+	KEY slug (slug),
+);
