@@ -2,9 +2,24 @@
 <ul class="list-unstyled">
     <f:for each="{categories}" as="category">
         <li>
-            <f:link.action action="list" class="text-decoration-none {f:if(condition: '{category.uid} == {demand.category}', then: 'active')}" arguments="{category: category.uid, term: demand.term}">
-                {category.title}
-            </f:link.action>
+            <f:if condition="{demand.term}">
+                <f:then>
+                    <f:link.action
+                        action="list"
+                        class="text-decoration-none {f:if(condition: '{category.uid} == {demand.category}', then: 'active')}"
+                        arguments="{category: category.uid, term: demand.term}">
+                        {category.title}
+                    </f:link.action>
+                </f:then>
+                <f:else>
+                    <f:link.action
+                        action="list"
+                        class="text-decoration-none {f:if(condition: '{category.uid} == {demand.category}', then: 'active')}"
+                        arguments="{category: category.uid}">
+                        {category.title}
+                    </f:link.action>
+                </f:else>
+            </f:if>
         </li>
     </f:for>
     <li>
