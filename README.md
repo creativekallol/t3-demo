@@ -1,66 +1,35 @@
-# TYPO3 CMS Base Distribution
+# TYPO3 Demo Project
 
-Get going quickly with TYPO3 CMS.
+This is a TYPO3 demo project showcasing a custom FAQ extension setup, ready for local development with [DDEV](https://ddev.readthedocs.io/).
 
-## Prerequisites
+## 🚀 Getting Started
 
-* PHP 8.2
-* [Composer](https://getcomposer.org/download/)
+Follow the steps below to clone and set up the project locally:
 
-## Quickstart
+### Project Setup
 
-* `composer create-project typo3/cms-base-distribution project-name ^13`
-* `cd project-name`
+    git clone -b main --single-branch https://github.com/creativekallol/t3-demo.git t3-demo
+    cd t3-demo
+    ddev start
+    ddev composer install
+    ddev import-db --file=.ddev/dump.sql
+    ddev composer exec typo3 extension:setup
+    ddev typo3 cache:flush -g system
 
-Note that this distribution installs most, but not all of the TYPO3 CMS core extensions.
-Depending on your need you might also want to install other TYPO3 extensions from
-[packagist.org](https://packagist.org/?type=typo3-cms-framework).
+## 🔍 Frontend Preview
 
-### Setup
+### Visit the FAQ demo page:
 
-To start an interactive installation, you can do so by executing the following
-command and then follow the wizard:
+👉 https://t3-demo.ddev.site/faq-demo
 
-```bash
-composer exec typo3 setup
-```
+## 🔐 Backend Access
 
-### Setup unattended (optional)
+### Access the TYPO3 backend:
+👉 https://t3-demo.ddev.site/typo3
+* Username: t3-faq
+* Password: t3FAQ25!
 
-If you're a more advanced user, you might want to leverage the unattended installation.
-To do this, you need to execute the following command and substitute the arguments
-with your own environment configuration.
-
-```bash
-export TYPO3_SETUP_ADMIN_PASSWORD=$(tr -dc "_A-Za-z0-9#=$()/" < /dev/urandom | head -c24)
-composer exec -- typo3 setup \
-    --no-interaction \
-    --server-type=other \
-    --driver=sqlite \
-    --admin-username=admin \
-    --admin-email="info@example.com" \
-    --project-name="My TYPO3 Project" \
-    --create-site="http://localhost:8000/"
-echo "Admin password: ${TYPO3_SETUP_ADMIN_PASSWORD}"
-```
-
-### Development server
-
-While it's advised to use a more sophisticated web server such as
-Apache 2 or Nginx, you can instantly run the project by using PHPs` built-in
-[web server](https://secure.php.net/manual/en/features.commandline.webserver.php).
-
-* `TYPO3_CONTEXT=Development php -S localhost:8000 -t public`
-* open your browser at "http://localhost:8000"
-
-Please be aware that the built-in web server is single threaded and only meant
-to be used for development.
-
-##  Next steps
-
-* [Getting Started with TYPO3](https://docs.typo3.org/permalink/t3start:start)
-* [Create a Site Package](https://docs.typo3.org/permalink/t3sitepackage:start)
-
-## License
-
-GPL-2.0 or later
+## 🛠 Tech Stack
+* TYPO3 CMS 13.4
+* DDEV for local environment
+* Composer for dependency management
