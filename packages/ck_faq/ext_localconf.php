@@ -27,3 +27,15 @@ ExtensionUtility::configurePlugin(
     ],
     ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
 );
+
+ExtensionUtility::configurePlugin(
+    'CkFaq',
+    'RatingApi',
+    [
+        FaqController::class => ['updateRating'],
+    ],
+    [
+        FaqController::class => ['updateRating'],
+    ],
+    ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
+);

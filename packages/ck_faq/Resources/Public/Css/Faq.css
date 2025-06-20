@@ -132,6 +132,10 @@ form.row.mb-4 .btn:hover {
     border-color: var(--color-faq-primary);
 }
 
+.faq-feedback.rated i {
+    pointer-events: none;
+}
+
 /* Pagination */
 .pagination {
     justify-content: center;

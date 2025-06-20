@@ -81,4 +81,54 @@ class FaqController extends ActionController
 
         return $this->htmlResponse();
     }
+
+    public function updateRatingAction(): ResponseInterface
+    {
+        $postData = $this->request->getParsedBody();
+
+        $act = $postData['act'] ?? '';
+        $faqId = (int)($postData['faq'] ?? 0);
+
+        if (empty($act) || empty($faqId) || !in_array($act, ['i', 'd'], true)) {
+            throw new \InvalidArgumentException('Invalid rating data', 1580585107);
+        }
+
+        $cookieName = 'faq_rating_' . $faqId;
+
+        // Exit early if already rated
+        if (!empty($_COOKIE[$cookieName])) {
+            $response = $this->responseFactory->createResponse()
+                ->withHeader('Content-Type', 'application/json; charset=utf-8');
+            $response->getBody()->write(
+                json_encode(['result' => false], JSON_THROW_ON_ERROR)
+            );
+            return $response;
+        }
+
+        // DB update
+        $this->faqService->updateRating($faqId, $act);
+
+        // Set rating cookie (expires in 10 years)
+        $ratingData = [
+            'faq' => $faqId,
+            'rate' => $act
+        ];
+        $cookieValue = urlencode(serialize($ratingData));
+        $cookieExpire = time() + (10 * 365 * 24 * 60 * 60); // 10 years
+
+        $response = $this->responseFactory->createResponse()
+            ->withHeader('Content-Type', 'application/json; charset=utf-8')
+            ->withAddedHeader('Set-Cookie', sprintf(
+                '%s=%s; Expires=%s; Path=/; SameSite=Lax',
+                $cookieName,
+                $cookieValue,
+                gmdate('D, d-M-Y H:i:s T', $cookieExpire)
+            ));
+
+        $response->getBody()->write(
+            json_encode(['result' => true], JSON_THROW_ON_ERROR)
+        );
+
+        return $response;
+    }
 }

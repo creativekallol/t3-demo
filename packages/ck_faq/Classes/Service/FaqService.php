@@ -103,4 +103,24 @@ class FaqService
 
         return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
+
+    public function updateRating(int $faqId, string $activity): void
+    {
+        if (!in_array($activity, ['i', 'd'], true)) {
+            return;
+        }
+
+        $field = $activity === 'i' ? 'count_helpful' : 'count_not_helpful';
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_ckfaq_domain_model_records');
+
+        $queryBuilder
+            ->update('tx_ckfaq_domain_model_records')
+            ->where(
+                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($faqId, Connection::PARAM_INT))
+            )
+            ->set($field, $queryBuilder->quoteIdentifier($field) . ' + 1', false)
+            ->executeStatement();
+    }
 }

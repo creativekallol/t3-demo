@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     injectClearButton();
     handleClearButtonClick();
-    handleThumbClicks();
     toggleClearButtonVisibility();
+    handleThumbClicks();
 });
 
 function injectClearButton() {
@@ -50,8 +50,46 @@ function handleThumbClicks() {
     document.querySelectorAll('.faq-feedback i').forEach(icon => {
         icon.addEventListener('click', () => {
             const container = icon.closest('.faq-feedback');
-            container.querySelectorAll('i').forEach(i => i.classList.remove('active'));
-            icon.classList.add('active');
+
+            // Prevent re-click
+            if (container.classList.contains('rated')) return;
+
+            const faqId = container.closest('.accordion-collapse').id.split('-')[1];
+            const act = icon.classList.contains('bi-hand-thumbs-up') ? 'i' : 'd';
+            const url = '/?type=11556633';
+
+            const formData = new URLSearchParams();
+            formData.append('act', act);
+            formData.append('faq', faqId);
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData.toString()
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Mark the icon as active
+                    icon.classList.add('active');
+
+                    // Show confirmation message
+                    container.querySelector('.was-helpful')?.classList.add('d-none');
+                    if (act === 'i') {
+                        container.querySelector('.helpful')?.classList.remove('d-none');
+                        container.querySelector('.bi-hand-thumbs-down')?.classList.add('d-none');
+                    } else {
+                        container.querySelector('.not-helpful')?.classList.remove('d-none');
+                        container.querySelector('.bi-hand-thumbs-up')?.classList.add('d-none');
+                    }
+
+                    // Mark container as rated to prevent further clicks
+                    container.classList.add('rated');
+                })
+                .catch(error => {
+                    console.error('Rating AJAX failed:', error);
+                });
         });
     });
 }

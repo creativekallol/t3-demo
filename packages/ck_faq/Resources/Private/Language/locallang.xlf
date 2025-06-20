@@ -24,6 +24,12 @@
 			<trans-unit id="body.label.wasHelpful" resname="body.label.wasHelpful">
 				<source>Was this article helpful?</source>
 			</trans-unit>
+			<trans-unit id="body.label.foundHelpful" resname="body.label.foundHelpful">
+				<source>You found this article helpful.</source>
+			</trans-unit>
+			<trans-unit id="body.label.foundNotHelpful" resname="body.label.foundNotHelpful">
+				<source>You found this article not helpful.</source>
+			</trans-unit>
 			<trans-unit id="body.label.noResult" resname="body.label.noResult">
 				<source>No result found. Try another search term or category.</source>
 			</trans-unit>

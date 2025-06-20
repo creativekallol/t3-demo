@@ -1,8 +1,13 @@
 <?php
+
+use Creativekallol\CkFaq\UserFunc\RecordTitleUserFunc;
+
 return [
     'ctrl' => [
         'title' => 'LLL:EXT:ck_faq/Resources/Private/Language/locallang_db.xlf:tx_ckfaq_domain_model_records',
         'label' => 'title',
+        'label_alt' => 'count_helpful, count_not_helpful',
+        'label_userFunc' => RecordTitleUserFunc::class . '->getRecordTitle',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'versioningWS' => true,
