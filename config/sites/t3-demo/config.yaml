@@ -1,0 +1,51 @@
+base: 'https://t3-demo.ddev.site/'
+languages:
+  -
+    title: English
+    enabled: true
+    locale: en-US
+    hreflang: ''
+    base: /
+    websiteTitle: 'T3 DEMO'
+    navigationTitle: ''
+    flag: en-us-gb
+    languageId: 0
+rootPageId: 1
+websiteTitle: ''
+
+routeEnhancers:
+  Category:
+    type: Extbase
+    extension: CkFaq
+    plugin: Pi1
+    routes:
+      -
+        routePath: '/{slug}'
+        _controller: 'Faq::list'
+        _arguments:
+          slug: category
+      -
+        routePath: '/{slug}/page-{currentPage}'
+        _controller: 'Faq::list'
+        _arguments:
+          slug: category
+          currentPage: currentPage
+      -
+        routePath: '/page-{currentPage}'
+        _controller: 'Faq::list'
+        _arguments:
+          currentPage: currentPage
+    defaultController: 'Faq::list'
+    aspects:
+      slug:
+        type: PersistedAliasMapper
+        tableName: sys_category
+        routeFieldName: slug
+      currentPage:
+        type: StaticRangeMapper
+        start: '1'
+        end: '100'
+    requirements:
+      product-slug: '^[a-z0-9\-]+$'
+    limitToPages:
+      - 2
